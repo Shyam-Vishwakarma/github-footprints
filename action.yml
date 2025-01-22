@@ -30,7 +30,7 @@ inputs:
   TRACK_EVENTS:
     description: "Events to track (comma-separated)"
     required: false
-    default: "PullRequestEvent,IssuesEvent,IssueCommentEvent,WatchEvent,PushEvent"
+    default: "PullRequestEvent,IssuesEvent,IssueCommentEvent"
 
 runs:
   using: "node16"
