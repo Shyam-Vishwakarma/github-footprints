@@ -1,0 +1,41 @@
+name: "GitHub Footprints"
+description: "👣 Leave your GitHub footprints in README - Track your latest activities automatically"
+author: "Shyam-Vishwakarma"
+
+inputs:
+  GITHUB_TOKEN:
+    description: "GitHub token for authentication"
+    required: true
+
+  USERNAME:
+    description: "GitHub username"
+    required: false
+    default: ${{ github.repository_owner }}
+
+  MAX_LINES:
+    description: "Maximum number of activity lines to show"
+    required: false
+    default: "5"
+
+  TARGET_FILE:
+    description: "File to update (e.g., README.md)"
+    required: false
+    default: "README.md"
+
+  COMMIT_MESSAGE:
+    description: "Custom commit message"
+    required: false
+    default: "🐙 Update activity in README"
+
+  TRACK_EVENTS:
+    description: "Events to track (comma-separated)"
+    required: false
+    default: "PullRequestEvent,IssuesEvent,IssueCommentEvent,WatchEvent,PushEvent"
+
+runs:
+  using: "node16"
+  main: "dist/index.js"
+
+branding:
+  icon: "activity"
+  color: "blue"
