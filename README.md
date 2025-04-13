@@ -102,7 +102,7 @@ After the action runs, your README will look something like this:
 | `MAX_LINES`         | Maximum number of activity lines to display.        | No           | `5`                                          |
 | `TARGET_FILE`       | File to update with activity data.                  | No           | `README.md`                                  |
 | `COMMIT_MESSAGE`    | Commit message for updating the file.               | No           | `🐙 Update activity in README`               |
-| `TRACK_EVENTS`      | Comma-separated list of events to track.            | No           | `PullRequestEvent,IssuesEvent,IssueCommentEvent,WatchEvent,PushEvent` |
+| `TRACK_EVENTS`      | Comma-separated list of events to track.            | No           | `PullRequestEvent,IssuesEvent,IssueCommentEvent` |
 
 
 
