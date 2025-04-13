@@ -23,27 +23,19 @@ async function run() {
       .slice(0, maxLines);
 
     const activityLines = filteredEvents.map((event, idx) => {
-      let line = ``;
+      let line = `${idx + 1}. `;
       const type = event.type;
       const payload = event.payload;
       const repo = event.repo;
 
-      if (type.match("PullRequestEvent")) {
-        line += `${idx + 1} 💪🏻  Opened PR [#${payload.number}](${
-          payload.pull_request.url
-        }) in [${repo.name}](${repo.url})`;
-      }
-
-      if (type.match("IssuesEvent")) {
-        line += `${idx + 1} ❗ Opened issue [#${payload.issue.number}](${
-          payload.issue.url
-        }) in [${repo.name}](${repo.url})`;
-      }
-
-      if (type.match("IssueCommentEvent")) {
-        line += `${idx + 1} 🗣️  Commented on [#${payload.issue.number}](${
-          payload.issue.url
-        }) in [${repo.name}](${repo.url})`;
+      if (type === "PullRequestEvent" && payload.action === "opened") {
+        line += `💪 Opened PR [#${payload.pull_request.number}](https://github.com/${repo.name}/pull/${payload.pull_request.number}) in [${repo.name}](https://github.com/${repo.name})`;
+      } else if (type === "PullRequestEvent" && payload.action === "closed") {
+        line += `❌ Closed PR [#${payload.pull_request.number}](https://github.com/${repo.name}/pull/${payload.pull_request.number}) in [${repo.name}](https://github.com/${repo.name})`;
+      } else if (type === "IssuesEvent" && payload.action === "opened") {
+        line += `❗ Opened issue [#${payload.issue.number}](https://github.com/${repo.name}/issues/${payload.issue.number}) in [${repo.name}](https://github.com/${repo.name})`;
+      } else if (type === "IssueCommentEvent") {
+        line += `🗣️ Commented on [#${payload.issue.number}](https://github.com/${repo.name}/issues/${payload.issue.number}) in [${repo.name}](https://github.com/${repo.name})`;
       }
 
       return line;
@@ -61,8 +53,12 @@ async function run() {
 
     const newContent = content.replace(
       new RegExp(`${startMarker}[\\s\\S]*${endMarker}`),
-      `${startMarker}\n${activityLines.join("</br>")}\n${endMarker}`
+      `${startMarker}\n${activityLines.join("\n")}\n${endMarker}`
     );
+
+    if (content === newContent) {
+      return;
+    }
 
     await octokit.rest.repos.createOrUpdateFileContents({
       ...github.context.repo,
@@ -71,6 +67,7 @@ async function run() {
       content: Buffer.from(newContent).toString("base64"),
       sha: fileData.sha,
     });
+
   } catch (error) {
     core.setFailed(error.message);
   }
