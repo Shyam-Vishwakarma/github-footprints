@@ -68,7 +68,7 @@ jobs:
           MAX_LINES: 5
           TARGET_FILE: README.md
           COMMIT_MESSAGE: "✨ Update GitHub activities in README"
-          TRACK_EVENTS: "PullRequestEvent,IssuesEvent,IssueCommentEvent,WatchEvent,PushEvent"
+          TRACK_EVENTS: "PullRequestEvent,IssuesEvent,IssueCommentEvent"
 ```
 
 ### 3. Customize the Workflow Inputs
@@ -78,7 +78,7 @@ jobs:
 - **`MAX_LINES`**: The maximum number of recent activity lines to display in the target file (default: `5`).
 - **`TARGET_FILE`**: The file to update with the activity data (default: `README.md`).
 - **`COMMIT_MESSAGE`**: Custom commit message for when the file is updated (default: `🐙 Update activity in README`).
-- **`TRACK_EVENTS`**: Comma-separated list of GitHub events to track (default: `PullRequestEvent,IssuesEvent,IssueCommentEvent,WatchEvent,PushEvent`).
+- **`TRACK_EVENTS`**: Comma-separated list of GitHub events to track (default: `PullRequestEvent,IssuesEvent,IssueCommentEvent`). 
 
 ### 4. Commit and Push the Workflow
 
@@ -103,6 +103,13 @@ After the action runs, your README will look something like this:
 | `TARGET_FILE`       | File to update with activity data.                  | No           | `README.md`                                  |
 | `COMMIT_MESSAGE`    | Commit message for updating the file.               | No           | `🐙 Update activity in README`               |
 | `TRACK_EVENTS`      | Comma-separated list of events to track.            | No           | `PullRequestEvent,IssuesEvent,IssueCommentEvent` |
+
+### Supported Value of `TRACK_EVENTS`
+- **PullRequestEvent**: Tracks pull requests you have opened.
+- **IssuesEvent**: Tracks issues you have created.
+- **IssueCommentEvent**: Tracks comments you have added to issues or pull requests.
+- **WatchEvent**: Tracks repositories you have starred.
+- **PushEvent**: Tracks pushes you have made to repositories.
 
 
 
