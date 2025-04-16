@@ -31716,7 +31716,7 @@ async function run() {
       if (type === "PullRequestEvent" && payload.action === "opened") {
         line += `💪 Opened PR [#${payload.pull_request.number}](https://github.com/${repo.name}/pull/${payload.pull_request.number}) in [${repo.name}](https://github.com/${repo.name})`;
       } else if (type === "PullRequestEvent" && payload.action === "closed") {
-        line += `❌ Closed PR [#${payload.pull_request.number}](https://github.com/${repo.name}/pull/${payload.pull_request.number}) in [${repo.name}](https://github.com/${repo.name})`;
+        line += `🔒 Closed PR [#${payload.pull_request.number}](https://github.com/${repo.name}/pull/${payload.pull_request.number}) in [${repo.name}](https://github.com/${repo.name})`;
       } else if (type === "IssuesEvent" && payload.action === "opened") {
         line += `❗ Opened issue [#${payload.issue.number}](https://github.com/${repo.name}/issues/${payload.issue.number}) in [${repo.name}](https://github.com/${repo.name})`;
       } else if (type === "IssueCommentEvent") {
@@ -31759,3 +31759,4 @@ async function run() {
 }
 
 run();
+
