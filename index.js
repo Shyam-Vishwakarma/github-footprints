@@ -2,6 +2,9 @@ import core from "@actions/core";
 import github from "@actions/github";
 
 async function run() {
+  const createLink = (txt, url) => {
+    return `[${txt}](${url})`;
+  };
   try {
     const githubToken = core.getInput("GITHUB_TOKEN");
     const username = core.getInput("USERNAME");
@@ -22,24 +25,64 @@ async function run() {
       .filter((event) => trackEvents.includes(event.type))
       .slice(0, maxLines);
 
-    const activityLines = filteredEvents.map((event, idx) => {
-      let line = `${idx + 1}. `;
-      const type = event.type;
-      const payload = event.payload;
-      const repo = event.repo;
+    const activityLines = filteredEvents
+      .filter((event) => {
+        const type = event.type;
+        const action = event.payload?.action;
 
-      if (type === "PullRequestEvent" && payload.action === "opened") {
-        line += `💪 Opened PR [#${payload.pull_request.number}](https://github.com/${repo.name}/pull/${payload.pull_request.number}) in [${repo.name}](https://github.com/${repo.name})`;
-      } else if (type === "PullRequestEvent" && payload.action === "closed") {
-        line += `🔒 Closed PR [#${payload.pull_request.number}](https://github.com/${repo.name}/pull/${payload.pull_request.number}) in [${repo.name}](https://github.com/${repo.name})`;
-      } else if (type === "IssuesEvent" && payload.action === "opened") {
-        line += `❗ Opened issue [#${payload.issue.number}](https://github.com/${repo.name}/issues/${payload.issue.number}) in [${repo.name}](https://github.com/${repo.name})`;
-      } else if (type === "IssueCommentEvent") {
-        line += `🗣️ Commented on [#${payload.issue.number}](https://github.com/${repo.name}/issues/${payload.issue.number}) in [${repo.name}](https://github.com/${repo.name})`;
-      }
+        return (
+          (type === "PullRequestEvent" &&
+            (action === "opened" || action === "closed")) ||
+          (type === "IssuesEvent" && action === "opened") ||
+          type === "IssueCommentEvent" ||
+          type === "PullRequestReviewEvent"
+        );
+      })
+      .map((event, idx) => {
+        const type = event.type;
+        const payload = event.payload;
+        const repo = event.repo;
+        const repoLink = createLink(
+          repo.name,
+          `https://github.com/${repo.name}`
+        );
+        let line = `${idx + 1}. `;
 
-      return line;
-    });
+        if (type === "PullRequestEvent" && payload.action === "opened") {
+          const prLink = createLink(
+            `#${payload.pull_request.number}`,
+            `https://github.com/${repo.name}/pull/${payload.pull_request.number}`
+          );
+          line += `💪 Opened PR ${prLink} in ${repoLink}`;
+        } else if (type === "PullRequestEvent" && payload.action === "closed") {
+          const prLink = createLink(
+            `#${payload.pull_request.number}`,
+            `https://github.com/${repo.name}/pull/${payload.pull_request.number}`
+          );
+          line += `🔒 Closed PR ${prLink} in ${repoLink}`;
+        } else if (type === "IssuesEvent" && payload.action === "opened") {
+          const issueLink = createLink(
+            `#${payload.issue.number}`,
+            `https://github.com/${repo.name}/issues/${payload.issue.number}`
+          );
+          line += `❗ Opened issue ${issueLink} in ${repoLink}`;
+        } else if (type === "IssueCommentEvent") {
+          const commentLink = createLink(
+            `#${payload.issue.number}`,
+            `https://github.com/${repo.name}/issues/${payload.issue.number}`
+          );
+          line += `🗣️ Commented on ${commentLink} in ${repoLink}`;
+        } else if (type === "PullRequestReviewEvent") {
+          const prLink = createLink(
+            `#${payload.pull_request.number}`,
+            `https://github.com/${repo.name}/pull/${payload.pull_request.number}`
+          );
+          line += `👀 Reviewed PR ${prLink} in ${repoLink}`;
+        }
+
+        return line;
+      })
+      .slice(0, maxLines);
 
     const { data: fileData } = await octokit.rest.repos.getContent({
       ...github.context.repo,
@@ -67,7 +110,6 @@ async function run() {
       content: Buffer.from(newContent).toString("base64"),
       sha: fileData.sha,
     });
-
   } catch (error) {
     core.setFailed(error.message);
   }
