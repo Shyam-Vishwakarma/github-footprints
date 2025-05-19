@@ -31711,7 +31711,7 @@ async function run() {
       .filter((event) => trackEvents.includes(event.type))
       .slice(0, maxLines);
 
-    const activityLines = events
+    const activityLines = filteredEvents
       .filter((event) => {
         const type = event.type;
         const action = event.payload?.action;
@@ -31767,7 +31767,8 @@ async function run() {
         }
 
         return line;
-      });
+      })
+      .slice(0, maxLines);
 
     const { data: fileData } = await octokit.rest.repos.getContent({
       ..._actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo,
