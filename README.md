@@ -8,7 +8,7 @@ GitHub Footprints is a GitHub Action that helps you automatically update your pr
 ## 🚀 Features
 
 - Tracks your recent GitHub activities and pushed it in `README.md` of your profile.
-- Supports activity types like Pull Requests, Issues, Comments, Stars, and more.
+- Supports activity types like Pull Requests, Pull Request Reviews, Issues, Comments, Stars, and more.
 - Customizable settings for the number of activities, target file, and commit messages.
 - Easy to set up and configure using GitHub Actions.
 
@@ -68,7 +68,7 @@ jobs:
           MAX_LINES: 5
           TARGET_FILE: README.md
           COMMIT_MESSAGE: "✨ Update GitHub activities in README"
-          TRACK_EVENTS: "PullRequestEvent,IssuesEvent,IssueCommentEvent"
+          TRACK_EVENTS: "PullRequestEvent,IssuesEvent,IssueCommentEvent,PullRequestReviewEvent"
 ```
 
 ### 3. Customize the Workflow Inputs
@@ -102,7 +102,7 @@ After the action runs, your README will look something like this:
 | `MAX_LINES`         | Maximum number of activity lines to display.        | No           | `5`                                          |
 | `TARGET_FILE`       | File to update with activity data.                  | No           | `README.md`                                  |
 | `COMMIT_MESSAGE`    | Commit message for updating the file.               | No           | `🐙 Update activity in README`               |
-| `TRACK_EVENTS`      | Comma-separated list of events to track.            | No           | `PullRequestEvent,IssuesEvent,IssueCommentEvent` |
+| `TRACK_EVENTS`      | Comma-separated list of events to track.            | No           | `PullRequestEvent,IssuesEvent,IssueCommentEvent,PullRequestReviewEvent` |
 
 ### Supported Value of `TRACK_EVENTS`
 - **PullRequestEvent**: Tracks pull requests you have opened.
@@ -110,6 +110,7 @@ After the action runs, your README will look something like this:
 - **IssueCommentEvent**: Tracks comments you have added to issues or pull requests.
 - **WatchEvent**: Tracks repositories you have starred.
 - **PushEvent**: Tracks pushes you have made to repositories.
+- **PullRequestReviewEvent**: Tracks pull request reviews you have submitted.
 
 
 
